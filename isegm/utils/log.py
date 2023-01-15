@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 
 import numpy as np
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 LOGGER_NAME = 'root'
 LOGGER_DATEFMT = '%Y-%m-%d %H:%M:%S'
@@ -48,25 +48,25 @@ class TqdmToLogger(io.StringIO):
             self.last_time = time.time()
 
 
-class SummaryWriterAvg(SummaryWriter):
-    def __init__(self, *args, dump_period=20, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._dump_period = dump_period
-        self._avg_scalars = dict()
+# class SummaryWriterAvg(SummaryWriter):
+#     def __init__(self, *args, dump_period=20, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self._dump_period = dump_period
+#         self._avg_scalars = dict()
 
-    def add_scalar(self, tag, value, global_step=None, disable_avg=False):
-        if disable_avg or isinstance(value, (tuple, list, dict)):
-            super().add_scalar(tag, np.array(value), global_step=global_step)
-        else:
-            if tag not in self._avg_scalars:
-                self._avg_scalars[tag] = ScalarAccumulator(self._dump_period)
-            avg_scalar = self._avg_scalars[tag]
-            avg_scalar.add(value)
+#     def add_scalar(self, tag, value, global_step=None, disable_avg=False):
+#         if disable_avg or isinstance(value, (tuple, list, dict)):
+#             super().add_scalar(tag, np.array(value), global_step=global_step)
+#         else:
+#             if tag not in self._avg_scalars:
+#                 self._avg_scalars[tag] = ScalarAccumulator(self._dump_period)
+#             avg_scalar = self._avg_scalars[tag]
+#             avg_scalar.add(value)
 
-            if avg_scalar.is_full():
-                super().add_scalar(tag, avg_scalar.value,
-                                   global_step=global_step)
-                avg_scalar.reset()
+#             if avg_scalar.is_full():
+#                 super().add_scalar(tag, avg_scalar.value,
+#                                    global_step=global_step)
+#                 avg_scalar.reset()
 
 
 class ScalarAccumulator(object):
